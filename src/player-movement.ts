@@ -7,19 +7,15 @@ class PlayerMovement extends pc.ScriptType {
   lookSpeed: number;
 
   _onMouseMove(e: any) {
-    // If pointer is disabled
-    // If the left mouse button is down update the camera from mouse movement
-    if (pc.Mouse.isPointerLocked() || e.buttons[0]) {
-      this.eulers.x -= this.lookSpeed * e.dx;
-      this.eulers.y -= this.lookSpeed * e.dy;
-    }
+    this.eulers.x -= this.lookSpeed * e.dx;
+    this.eulers.y -= this.lookSpeed * e.dy;
   }
 
   initialize() {
     this.force = new pc.Vec3();
     this.eulers = new pc.Vec3();
 
-    var app = this.app;
+    const app = this.app;
 
     // Listen for mouse move events
     app.mouse.on("mousemove", this._onMouseMove, this);
@@ -42,16 +38,16 @@ class PlayerMovement extends pc.ScriptType {
   }
 
   update(dt: number): void {
-    var force = this.force;
-    var app = this.app;
+    const force = this.force;
+    const app = this.app;
 
     // Get camera directions to determine movement directions
-    var forward = this.camera.forward;
-    var right = this.camera.right;
+    const forward = this.camera.forward;
+    const right = this.camera.right;
 
     // movement
-    var x = 0;
-    var z = 0;
+    let x = 0;
+    let z = 0;
 
     // Use W-A-S-D keys to move player
     // Check for key presses
