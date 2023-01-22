@@ -1,6 +1,7 @@
 class PlayerMovement extends pc.ScriptType {
   // State
   _eulers: pc.Vec3;
+  _camera: pc.Entity;
 
   // Attributes
   lookSpeed: number;
@@ -18,22 +19,22 @@ class PlayerMovement extends pc.ScriptType {
 
   initialize() {
     this._eulers = new pc.Vec3();
+    this._camera = new pc.Entity();
 
-    const { app } = this;
+    const { app, entity, _camera } = this;
 
     app.mouse.on("mousemove", this._onMouseMove, this);
     app.mouse.disableContextMenu();
+
+    _camera.addComponent("camera");
+    _camera.translateLocal(0, 0, 0);
+
+    entity.addChild(_camera);
   }
 
   update(dt: number): void {
-    const { app, _eulers, entity } = this;
-    const cameraEntity = entity.camera?.entity;
-
-    if (!cameraEntity) {
-      throw new Error("This script needs a camera component");
-    }
-
-    const { forward, right } = cameraEntity; // Get camera directions to determine movement directions
+    const { app, entity, _eulers, _camera } = this;
+    const { forward, right } = _camera; // Get camera directions to determine movement directions
 
     let xChange = 0;
     let yChange = 0;
@@ -84,7 +85,7 @@ class PlayerMovement extends pc.ScriptType {
     }
 
     // update camera angle from mouse events
-    cameraEntity.setLocalEulerAngles(_eulers.y, _eulers.x, 0);
+    _camera.setLocalEulerAngles(_eulers.y, _eulers.x, 0);
   }
 }
 
