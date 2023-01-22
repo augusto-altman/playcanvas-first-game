@@ -15,14 +15,7 @@ class PlayerMovement extends pc.ScriptType {
 
   initialize() {
     this._eulers = new pc.Vec3();
-
     this.app.mouse.on("mousemove", this._onMouseMove, this);
-
-    if (!this.entity.collision) {
-      console.error(
-        "Player movement script needs to have a 'collision' component"
-      );
-    }
   }
 
   update(dt: number): void {
@@ -55,11 +48,11 @@ class PlayerMovement extends pc.ScriptType {
     }
 
     if (app.keyboard.isPressed(pc.KEY_Q)) {
-      yChange += 1;
+      yChange -= 1;
     }
 
     if (app.keyboard.isPressed(pc.KEY_E)) {
-      yChange -= 1;
+      yChange += 1;
     }
 
     if (xChange !== 0 || zChange !== 0 || yChange !== 0) {
