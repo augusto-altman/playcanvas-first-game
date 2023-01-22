@@ -5,16 +5,17 @@
     "lib": [
       "DOM",
       "ES2017"
-    ], 
+    ],
     "outFile": "./build/main.build.js",
-    "rootDir": "./src",                
-    "strict": true, 
-    "strictPropertyInitialization": false, 
+    "rootDir": "./src",
+    "strict": true,
+    "strictPropertyInitialization": false,
     "types": [
       "playcanvas"
     ],
     "esModuleInterop": true,
-    "experimentalDecorators": true, 
-    "forceConsistentCasingInFileNames": true
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node"
   }
 }
