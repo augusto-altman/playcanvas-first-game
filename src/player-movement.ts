@@ -3,11 +3,14 @@ class PlayerMovement extends pc.ScriptType {
   _eulers: pc.Vec3;
 
   // Attributes
-  camera: pc.Entity; // TODO: can we get this from the hierarchy?
   lookSpeed: number;
 
   _onMouseMove(e: any) {
     const { _eulers, lookSpeed } = this;
+
+    if (!pc.Mouse.isPointerLocked()) {
+      return;
+    }
 
     _eulers.x -= lookSpeed * e.dx;
     _eulers.y -= lookSpeed * e.dy;
@@ -15,17 +18,33 @@ class PlayerMovement extends pc.ScriptType {
 
   initialize() {
     this._eulers = new pc.Vec3();
-    this.app.mouse.on("mousemove", this._onMouseMove, this);
+
+    const { app } = this;
+
+    app.mouse.on("mousemove", this._onMouseMove, this);
+    app.mouse.disableContextMenu();
   }
 
   update(dt: number): void {
-    const { app, camera, _eulers, entity } = this;
+    const { app, _eulers, entity } = this;
+    const cameraEntity = entity.camera?.entity;
 
-    const { forward, right } = camera; // Get camera directions to determine movement directions
+    if (!cameraEntity) {
+      throw new Error("This script needs a camera component");
+    }
+
+    const { forward, right } = cameraEntity; // Get camera directions to determine movement directions
 
     let xChange = 0;
     let yChange = 0;
     let zChange = 0;
+
+    if (app.mouse.isPressed(pc.MOUSEBUTTON_RIGHT)) {
+      // when the left button is pressed hide the cursor
+      app.mouse.enablePointerLock();
+    } else {
+      app.mouse.disablePointerLock();
+    }
 
     if (app.keyboard.isPressed(pc.KEY_A)) {
       xChange -= right.x;
@@ -65,16 +84,11 @@ class PlayerMovement extends pc.ScriptType {
     }
 
     // update camera angle from mouse events
-    camera.setLocalEulerAngles(_eulers.y, _eulers.x, 0);
+    cameraEntity.setLocalEulerAngles(_eulers.y, _eulers.x, 0);
   }
 }
 
 pc.registerScript(PlayerMovement, "playerMovement");
-
-PlayerMovement.attributes.add("camera", {
-  type: "entity",
-  description: "Optional, assign a camera entity, otherwise one is created",
-});
 
 PlayerMovement.attributes.add("lookSpeed", {
   type: "number",
